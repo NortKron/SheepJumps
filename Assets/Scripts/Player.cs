@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour 
+{
 
     public float SizeStep = 1;
     public float boundaryDestroy = -10;

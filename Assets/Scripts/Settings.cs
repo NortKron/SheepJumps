@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 
-public class Settings : MonoBehaviour {
+public class Settings : MonoBehaviour 
+{
 
     private bool isFullScreen;
 
