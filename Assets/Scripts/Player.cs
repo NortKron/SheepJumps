@@ -2,27 +2,108 @@
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class Player : MonoBehaviour 
+public struct Inventory
+{
+    public int Id;
+    public string Name;
+    public float buster;
+}
+
+public class Player : MonoBehaviour //, IPointerDownHandler
 {
 
     public float SizeStep = 1;
-    public float boundaryDestroy = -10;
-    public float boundaryRespawn = 10;
+    public float JumpForce = 0.03f;
+    public float timeRespawn = 0.5f;
 
-    private bool isJump;
-    private bool isRespawn;
+    public GameObject panelTutorial;
+    public GameObject panelH;
 
-    private Vector3 playerPosition;
+    private bool isRunnig;
+    private bool isCanJump;
+
     private Vector3 playerPositionStart;
 
-    //public Transform prefabPlayer;
+    //private float boundaryRespawn = -10;
+    private float boundaryDestroy = -10;
 
-    //public Rigidbody2D rb;
+    private new Rigidbody2D rigidbody;
+    Animator animator;
+    SpriteRenderer sprite;
+
+    // Use this for initialization
+    void Start()
+    {
+        //boundaryRespawn = Camera.main.ViewportToWorldPoint(new Vector2(0, 0)).x;
+        boundaryDestroy = Camera.main.ViewportToWorldPoint(new Vector2(1f, 1f)).x + 1f;
+
+        //Debug.Log("size : " + GetComponent<SpriteRenderer>().sprite.rect.size);
+
+        //Vector2 v1 = Camera.main.ViewportToWorldPoint( new Vector2(0, 0) );
+        //Vector2 v2 = Camera.main.ViewportToWorldPoint(new Vector2(1f, 1f));
+        //Debug.Log("boundary : " + v1.x + ", " + v2.x);
+
+        // get start position player
+        playerPositionStart = gameObject.transform.position;
+
+        panelTutorial.GetComponent<Text>().text = "Tap to jump";
+        //panelH.GetComponent<Text>().text = "X : " + transform.position.x;
+
+        rigidbody = GetComponent<Rigidbody2D>();
+        //animator = GetComponent<Animator>();
+        sprite = GetComponentInChildren<SpriteRenderer>();
+
+        isRunnig = true;
+        isCanJump = true;
+        this.name = "Sheep";
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (isRunnig)
+        {
+            panelH.GetComponent<Text>().text = "X : " + transform.position.x;
+
+            // Овечка бежит вперёд
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                transform.position + transform.right,   
+                SizeStep * Time.deltaTime);
+
+            //Input.GetTouch(0).
+
+            // Прыжок
+            //if (Input.GetButtonDown("Jump") && isCanJump)
+            if (Input.touchCount > 0 || Input.GetButton("Jump"))
+            //if (Input.GetButton("Jump"))
+            {
+                if (isCanJump) Jump();
+            }
+
+            if (transform.position.x > boundaryDestroy)
+            {
+                StartCoroutine(InstDestroyFail(0));
+            }
+        }
+        else
+        {
+            // to do something
+        }
+    }
+
+    void Jump()
+    {
+        //Debug.Log("Jump");
+        rigidbody.AddForce(transform.up * JumpForce, ForceMode2D.Impulse);
+    }
 
     void OnGUI()
     {
-        GUI.Label(new Rect(5.0f, 3.0f, 200.0f, 200.0f), "X: " + transform.position.x);
+        //GUI.Label(new Rect(5.0f, 3.0f, 200.0f, 200.0f), "X: " + transform.position.x);
     }
 
     void OnTriggerEnter()
@@ -32,62 +113,47 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        isJump = true;
-        //Debug.Log("OnCollisionEnter2D");
-        /*
+        //Debug.Log("Collision tag : " + collision.gameObject.name);
+
         if (collision.gameObject.name == "Bed")
         {
-            Debug.Log("Collision 1");
+            //stumble animation
+            rigidbody.AddForce(transform.up * 5, ForceMode2D.Impulse);
+            rigidbody.AddForce(transform.forward * 10, ForceMode2D.Impulse);
+
+            panelTutorial.GetComponent<Text>().text = "Jump fail";
+
+            isCanJump = false;
+            isRunnig = false;
+            StartCoroutine(InstDestroyFail(timeRespawn));
         }
-        */
     }
 
-    // Use this for initialization
-    void Start()
+    private IEnumerator InstDestroyFail(float time)
     {
-        // get start position player
-        playerPosition = gameObject.transform.position;
-        playerPositionStart = gameObject.transform.position;
+        yield return new WaitForSeconds(time);
 
-        isJump = false;
-        isRespawn = false;
+        // Создать новую овечку за левой границей экрана
+        Instantiate(this.transform, playerPositionStart, Quaternion.identity);
 
-        this.name = "Sheep";
+        // Удалить овечку при пересечении правой границы экрана
+        Destroy(this.gameObject);
     }
 
-    // Update is called once per frame
-    void Update()
+    /*
+    public void OnPointerDown(PointerEventData eventData)
     {
-        //playerPosition.x += SizeStep;
-        //transform.position = new Vector3(playerPosition.x, playerPosition.y, playerPosition.z);
-                
-        transform.position = Vector3.MoveTowards(
-            transform.position,
-            transform.position + transform.right,
-            //transform.position + transform.up,
-            SizeStep * Time.deltaTime);
-            //SizeStep);
-        
-        /*
-        if (!isJump && Input.GetButtonDown("Jump"))
-        {
-            //isJump = true;
-            Debug.Log("Jumping");
-        }
-        */
-        
-        if (!isRespawn && transform.position.x > boundaryDestroy)
-        {
-            isRespawn = true;
-            Debug.Log("Respawn, X : " + transform.position.x);
-            Instantiate(this.transform, playerPositionStart, Quaternion.identity);
-        }
-        
-        if (transform.position.x > boundaryDestroy)
-        {
-            //Debug.Log("boundaryDestroy : " + boundaryDestroy);
-            Debug.Log("Destroy, X : " + transform.position.x);
-            Destroy(this.gameObject);
-        }
+        Debug.Log("eventData : " + eventData.position);
+    }
+    */
+
+    void OnBecameVisible()
+    {
+        //Debug.Log("OnBecameVisible");
+    }
+
+    private void OnBecameInvisible()
+    {
+        //StartCoroutine(InstDestroyFail(0));
     }
 }

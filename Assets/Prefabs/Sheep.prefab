@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 4570207174619732}
   - component: {fileID: 212004905126329340}
   - component: {fileID: 114393446526539864}
-  - component: {fileID: 58613953826661746}
-  - component: {fileID: 50112071979383944}
+  - component: {fileID: 341637668}
+  - component: {fileID: 1309521680365850949}
   m_Layer: 0
   m_Name: Sheep
   m_TagString: Player
@@ -28,8 +28,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1478974023196530}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11, y: -2, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -75,15 +75,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: c848253d450bdbd40a723e769b4462c6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 81b1448cc527a104382ec7ffade58abc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 8, y: 5.99}
+  m_Size: {x: 1.5, y: 1.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &114393446526539864
@@ -98,27 +98,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 602b753eb7cee724a869148c35e3cf6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SizeStep: 0
-  boundaryDestroy: 0
-  boundaryRespawn: 0
-  prefabPlayer: {fileID: 0}
---- !u!58 &58613953826661746
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1478974023196530}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.6
---- !u!50 &50112071979383944
+  SizeStep: 5
+  JumpForce: 0.03
+  timeRespawn: 0.5
+  panelTutorial: {fileID: 0}
+--- !u!50 &341637668
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -139,3 +123,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!70 &1309521680365850949
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1478974023196530}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 8, y: 7}
+  m_Direction: 0
